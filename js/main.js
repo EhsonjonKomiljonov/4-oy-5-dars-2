@@ -65,15 +65,16 @@ elContactBox.addEventListener("click", (evt) => {
   if (evt.target.matches(".js-delete-btn")) {
     let contactId = evt.target.dataset.contacId;
 
-    let findedContact = userInfo.findIndex((el) => (el.id = contactId));
+    let findedContact = userInfo.findIndex((el) => el.id == contactId);
 
     userInfo.splice(findedContact, 1);
     addNewContact(userInfo, elContactBox);
   }
+
   if (evt.target.matches(".js-edit-btn")) {
     let contactId = evt.target.dataset.contacId;
 
-    let findedContact = userInfo.find((el) => (el.id = contactId));
+    let findedContact = userInfo.find((el) => el.id == contactId);
     let editName = prompt(
       "Ismga o'zgartirishni kiriting !!!",
       findedContact.name
@@ -90,6 +91,7 @@ elContactBox.addEventListener("click", (evt) => {
     findedContact.name = editName;
     findedContact.relation = editRelation;
     findedContact.phone = editPhone;
+
     addNewContact(userInfo, elContactBox);
   }
 });
