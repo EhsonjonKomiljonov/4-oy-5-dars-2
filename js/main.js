@@ -1,13 +1,15 @@
 const elForm = document.querySelector(".js-form");
-const elUserName = document.querySelector(".js-user-name");
+const elUserName = document.querySelector(".js-name");
 const elRelationship = document.querySelector(".js-relationship");
 const elPhoneNumber = document.querySelector(".js-phone-number");
 const elSumbitter = document.querySelector(".js-submit");
 const elContactBox = document.querySelector(".js-contact-box");
 
-const userInfo = [];
+const localData = JSON.parse(window.localStorage.getItem("userinfo"));
+const userInfo = localData || [];
 
 const addNewContact = (array, node) => {
+  window.localStorage.setItem("userinfo", JSON.stringify(userInfo));
   node.textContent = "";
   array.forEach((el) => {
     const newUserName = document.createElement("h2");
@@ -46,19 +48,28 @@ const addNewContact = (array, node) => {
   });
 };
 
+addNewContact(userInfo, elContactBox);
+
 elForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
 
-  const userContact = {
-    id: userInfo.length + 1,
-    name: elUserName.value,
-    relation: elRelationship.value,
-    phone: elPhoneNumber.value,
-  };
+  const findedIndex = userInfo.findIndex(
+    (item) => item.phone === elPhoneNumber.value
+  );
 
-  userInfo.push(userContact);
+  if (findedIndex >= 0) {
+    alert("Bunaqa raqamli User mavjud");
+  } else {
+    const userContact = {
+      id: userInfo.length + 1,
+      name: elUserName.value,
+      relation: elRelationship.value,
+      phone: elPhoneNumber.value,
+    };
 
-  addNewContact(userInfo, elContactBox);
+    userInfo.push(userContact);
+    addNewContact(userInfo, elContactBox);
+  }
 });
 
 elContactBox.addEventListener("click", (evt) => {
@@ -95,3 +106,25 @@ elContactBox.addEventListener("click", (evt) => {
     addNewContact(userInfo, elContactBox);
   }
 });
+
+// DARK MODE // LIGHT MODE
+
+const elModeBtn = document.querySelector(".mode-btn");
+let theme = false;
+
+elModeBtn.addEventListener("click", () => {
+  theme = !theme;
+  const newBg = theme ? "dark" : "light";
+  window.localStorage.setItem("theme", newBg);
+  newTheme();
+});
+
+let newTheme = () => {
+  if (window.localStorage.getItem("theme") == "dark") {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
+};
+
+newTheme();
